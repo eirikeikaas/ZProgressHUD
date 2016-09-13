@@ -53,78 +53,78 @@ public extension Notification.Name {
 
 public class ZProgressHUD: UIView {
     
-    private var lineWidth: CGFloat = 2.0
-    private var fadeOutTimer: Timer?
+    fileprivate var lineWidth: CGFloat = 2.0
+    fileprivate var fadeOutTimer: Timer?
     
-    private let maxmumLabelSize = CGSize(width: UIScreen.main().bounds.width / 2.0, height: 260)
-    private let minmumLabelHeight: CGFloat = 20.0
+    fileprivate let maxmumLabelSize = CGSize(width: UIScreen.main.bounds.width / 2.0, height: 260)
+    fileprivate let minmumLabelHeight: CGFloat = 20.0
     
-    private var minmumSize = CGSize(width: 100, height: 100)
-    private var pureLabelminmumSize = CGSize(width: 100, height: 28.0)
-    private var minimumDismissDuration: TimeInterval = 3.0
-    private var fadeInAnimationDuration: TimeInterval = 0.15
-    private var fadeOutAnimationDuration: TimeInterval = 0.25
+    fileprivate var minmumSize = CGSize(width: 100, height: 100)
+    fileprivate var pureLabelminmumSize = CGSize(width: 100, height: 28.0)
+    fileprivate var minimumDismissDuration: TimeInterval = 3.0
+    fileprivate var fadeInAnimationDuration: TimeInterval = 0.15
+    fileprivate var fadeOutAnimationDuration: TimeInterval = 0.25
 
-    private var errorImage: UIImage?
-    private var successImage: UIImage?
-    private var infoImage: UIImage?
-    private var customImage: UIImage?
+    fileprivate var errorImage: UIImage?
+    fileprivate var successImage: UIImage?
+    fileprivate var infoImage: UIImage?
+    fileprivate var customImage: UIImage?
     
-    private var fgColor: UIColor?
-    private var bgColor: UIColor?
-    private var bgLayerColor: UIColor?
+    fileprivate var fgColor: UIColor?
+    fileprivate var bgColor: UIColor?
+    fileprivate var bgLayerColor: UIColor?
 
-    private var defaultStyle: ZProgressHUDStyle = .dark
-    private var defaultMaskType: ZProgressHUDMaskType = .none
-    private var defaultPorgressType: ZProgressHUDProgressType = .general
-    private var defaultStatusType: ZProgressHUDStatusType = .indicator
-    private var defaultPositionType: ZProgressHUDPositionType = .center
+    fileprivate var defaultStyle: ZProgressHUDStyle = .dark
+    fileprivate var defaultMaskType: ZProgressHUDMaskType = .none
+    fileprivate var defaultPorgressType: ZProgressHUDProgressType = .general
+    fileprivate var defaultStatusType: ZProgressHUDStatusType = .indicator
+    fileprivate var defaultPositionType: ZProgressHUDPositionType = .center
     
-    private var centerOffset: UIOffset = UIOffsetZero
+    fileprivate var centerOffset: UIOffset = UIOffset.zero
     
-    private var font = UIFont.systemFont(ofSize: 16.0) {
+    fileprivate var font = UIFont.systemFont(ofSize: 16.0) {
         didSet {
             self.statusLabel.font = self.font
             self.placeSubviews()
         }
     }
     
-    private var status: String?
+    fileprivate var status: String?
     
-    private var pureLabelCornerRadius: CGFloat  = 8.0 {
+    fileprivate var pureLabelCornerRadius: CGFloat  = 8.0 {
         didSet {
             self.hudView.layer.cornerRadius = self.pureLabelCornerRadius
         }
     }
     
-    private var cornerRadius: CGFloat = 14.0 {
+    fileprivate var cornerRadius: CGFloat = 14.0 {
         didSet {
             self.hudView.layer.cornerRadius = self.cornerRadius
         }
     }
     
-    private var indicatorView: UIView?
+    fileprivate var indicatorView: UIView?
     
     // MARK: - Singleton && initialization
     
-    private static let shared: ZProgressHUD = {
+    fileprivate static let shared: ZProgressHUD = {
         return ZProgressHUD()
     }()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        NotificationCenter.default().addObserver(self,
+        NotificationCenter.default.addObserver(self,
                                                  selector: #selector(ZProgressHUD.positionHUD(_:)),
                                                  name: .UIApplicationDidChangeStatusBarOrientation,
                                                  object: nil)
         
-        NotificationCenter.default().addObserver(self,
+        NotificationCenter.default.addObserver(self,
                                                  selector: #selector(ZProgressHUD.positionHUD(_:)),
                                                  name: .UIKeyboardWillHide,
                                                  object: nil)
         
-        NotificationCenter.default().addObserver(self,
+        NotificationCenter.default.addObserver(self,
                                                  selector: #selector(ZProgressHUD.positionHUD(_:)),
                                                  name: .UIKeyboardWillShow,
                                                  object: nil)
@@ -142,7 +142,7 @@ public class ZProgressHUD: UIView {
     }
     
     deinit {
-        NotificationCenter.default().removeObserver(NSNotification.Name.UIDeviceOrientationDidChange)
+        NotificationCenter.default.removeObserver(self)
     }
     
     // MARK: - Events
@@ -156,7 +156,7 @@ public class ZProgressHUD: UIView {
         UIView.beginAnimations("com.zevwings.animation.positionhud", context: nil)
         UIView.setAnimationDuration(0.25)
         UIView.setAnimationCurve(UIViewAnimationCurve.easeInOut)
-        self.frame = UIScreen.main().bounds
+        self.frame = UIScreen.main.bounds
         self.backgroundLayer?.frame = self.frame
         self.overlayView.frame = self.frame
         self.hudView.center = CGPoint(x: self.frame.width/2.0 + self.centerOffset.horizontal,
@@ -166,14 +166,14 @@ public class ZProgressHUD: UIView {
     
     // overlay touch event
     internal func overlayViewDidReceiveTouchEvent(_ sender: AnyObject?, event: UIEvent) {
-        NotificationCenter.default().post(name: NSNotification.Name.ZProgressHUDDidRecieveTouchEvent,
+        NotificationCenter.default.post(name: NSNotification.Name.ZProgressHUDDidRecieveTouchEvent,
                                           object: self)
     }
     
     // MARK: - Widget
-    private lazy var overlayView: UIControl = {
+    fileprivate lazy var overlayView: UIControl = {
         let overlayView = UIControl(frame: self.frame)
-        overlayView.backgroundColor = UIColor.clear()
+        overlayView.backgroundColor = UIColor.clear
         overlayView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         overlayView.addTarget(self,
                               action: #selector(ZProgressHUD.overlayViewDidReceiveTouchEvent(_:event:)),
@@ -182,9 +182,9 @@ public class ZProgressHUD: UIView {
         return overlayView
     }()
     
-    private lazy var statusLabel: UILabel = {
+    fileprivate lazy var statusLabel: UILabel = {
         var statusLabel = UILabel(frame: CGRect.zero)
-        statusLabel.backgroundColor = UIColor.clear()
+        statusLabel.backgroundColor = UIColor.clear
         statusLabel.adjustsFontSizeToFitWidth = true
         statusLabel.textAlignment = .center
         statusLabel.font = self.font
@@ -193,13 +193,13 @@ public class ZProgressHUD: UIView {
         return statusLabel
     }()
     
-    private lazy var imageView: UIImageView = {
+    fileprivate lazy var imageView: UIImageView = {
         let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 28.0, height: 28.0))
         imageView.isUserInteractionEnabled = false
         return imageView
     }()
     
-    private lazy var hudView: UIView = {
+    fileprivate lazy var hudView: UIView = {
         var hudView = UIView(frame: CGRect(x: 0, y: 0, width: self.minmumSize.width, height: self.minmumSize.height))
         hudView.layer.masksToBounds = true
         hudView.autoresizingMask = [.flexibleBottomMargin,
@@ -209,7 +209,7 @@ public class ZProgressHUD: UIView {
         return hudView
     }()
     
-    private lazy var colouredLayer: CALayer = {
+    fileprivate lazy var colouredLayer: CALayer = {
         let colouredLayer = CALayer()
         colouredLayer.frame = self.bounds
         let backgroundColor = self.defaultMaskType == .custom ?
@@ -219,7 +219,7 @@ public class ZProgressHUD: UIView {
         return colouredLayer
     }()
     
-    private lazy var gradientLayer: CALayer = {
+    fileprivate lazy var gradientLayer: CALayer = {
         let gradientLayer = ZGradientLayer()
         gradientLayer.frame = self.bounds
         var gradientCenter = self.center
@@ -229,27 +229,27 @@ public class ZProgressHUD: UIView {
         return gradientLayer
     }()
     
-    private var backgroundLayer: CALayer? = nil
+    fileprivate var backgroundLayer: CALayer? = nil
     
-    private lazy var animationIndicator: ZAnimationIndicatorView = {
+    fileprivate lazy var animationIndicator: ZAnimationIndicatorView = {
         let animationIndicator = ZAnimationIndicatorView(frame: CGRect(x: 0, y: 0, width: 37, height: 37))
         animationIndicator.lineWidth = self.lineWidth
-        animationIndicator.strokeColor = self.foregroundColor() ?? UIColor.white()
+        animationIndicator.strokeColor = self.foregroundColor()
         return animationIndicator
     }()
     
-    private lazy var activityIndicator: ZActivityIndicatorView = {
+    fileprivate lazy var activityIndicator: ZActivityIndicatorView = {
         let activityIndicator = ZActivityIndicatorView(frame: CGRect(x: 0, y: 0, width: 37, height: 37))
         activityIndicator.lineWidth = self.lineWidth
-        activityIndicator.strokeColor = self.foregroundColor() ?? UIColor.white()
+        activityIndicator.strokeColor = self.foregroundColor()
         activityIndicator.hidesWhenStopped = true
         activityIndicator.autoAnimating = true
         return activityIndicator
     }()
     
-    private lazy var nativeIndicator: UIActivityIndicatorView = {
+    fileprivate lazy var nativeIndicator: UIActivityIndicatorView = {
         let nativeIndicator = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
-        nativeIndicator.tintColor = self.foregroundColor() ?? UIColor.white()
+        nativeIndicator.tintColor = self.foregroundColor()
         nativeIndicator.hidesWhenStopped = true
         nativeIndicator.startAnimating()
         return nativeIndicator
@@ -260,7 +260,7 @@ public class ZProgressHUD: UIView {
 extension ZProgressHUD {
     
     // set the views' properties
-    private func prepare() {
+    fileprivate func prepare() {
         
         if !self.isVisible() {
             self.alpha = 0
@@ -335,13 +335,13 @@ extension ZProgressHUD {
     }
     
     //  add the subviews
-    private func addSubviews() {
+    fileprivate func addSubviews() {
         self.removeSubviews()
         self.prepare()
         
         if self.overlayView.superview == nil {
-            for window in UIApplication.shared().windows.reversed() {
-                let windowOnMainScreen = window.screen == UIScreen.main()
+            for window in UIApplication.shared.windows.reversed() {
+                let windowOnMainScreen = window.screen == UIScreen.main
                 let windowIsVisible = !window.isHidden && window.alpha > 0
                 let windowLevelNormal = window.windowLevel == UIWindowLevelNormal
                 
@@ -384,7 +384,7 @@ extension ZProgressHUD {
     }
     
     // set the view's frame
-    private func placeSubviews() {
+    fileprivate func placeSubviews() {
         var rect = CGRect.zero
         let minSize = self.defaultStatusType == .pureStatus ? self.pureLabelminmumSize : self.minmumSize
         var labelSize = CGSize.zero
@@ -395,7 +395,7 @@ extension ZProgressHUD {
             
             let style = NSMutableParagraphStyle()
             style.lineBreakMode = NSLineBreakMode.byCharWrapping
-            let attributes = [NSFontAttributeName: self.font, NSParagraphStyleAttributeName: style]
+            let attributes: [String : Any] = [NSFontAttributeName: self.font, NSParagraphStyleAttributeName: style]
             let option: NSStringDrawingOptions = [.usesLineFragmentOrigin,
                                                   .usesFontLeading,
                                                   .truncatesLastVisibleLine]
@@ -456,7 +456,7 @@ extension ZProgressHUD {
         CATransaction.commit()
     }
     
-    private func removeSubviews() {
+    fileprivate func removeSubviews() {
         
         self.imageView.removeFromSuperview()
         self.statusLabel.removeFromSuperview()
@@ -470,7 +470,7 @@ extension ZProgressHUD {
 // MARK: - internal show methods
 internal extension ZProgressHUD {
 
-    private func show(_ status: String? = nil) {
+    fileprivate func show(_ status: String? = nil) {
         self.setHUD(with: status, false)
         self.defaultStatusType = .indicator
         DispatchQueue.main.async {
@@ -482,7 +482,7 @@ internal extension ZProgressHUD {
         }
     }
     
-    private func show(status image: UIImage? = nil, status: String? = nil, statusType:
+    fileprivate func show(status image: UIImage? = nil, status: String? = nil, statusType:
         ZProgressHUDStatusType = .custom) {
 
         self.setHUD(with: status, false)
@@ -499,7 +499,7 @@ internal extension ZProgressHUD {
         }
     }
     
-    private func dismiss(delay: TimeInterval = 0.0) {
+    fileprivate func dismiss(delay: TimeInterval = 0.0) {
         if delay > 0 {
             self.setFadeOutTimter(delay)
             return
@@ -516,11 +516,11 @@ internal extension ZProgressHUD {
         }
     }
 
-    private func isVisible() -> Bool {
+    fileprivate func isVisible() -> Bool {
         return self.alpha > 0
     }
 
-    private func setFadeOutTimter(_ timeInterval: TimeInterval) {
+    fileprivate func setFadeOutTimter(_ timeInterval: TimeInterval) {
         if self.fadeOutTimer != nil {
             self.fadeOutTimer?.invalidate()
             self.fadeOutTimer = nil
@@ -530,7 +530,7 @@ internal extension ZProgressHUD {
                                   target: self,
                                   selector: #selector(self.fadeOut(_:)),
                                   userInfo: nil, repeats: true)
-        RunLoop.main().add(self.fadeOutTimer!, forMode:RunLoopMode.commonModes)
+        RunLoop.main.add(self.fadeOutTimer!, forMode:RunLoopMode.commonModes)
     }
     
     func fadeOut(_ timer: Timer) {
@@ -539,10 +539,10 @@ internal extension ZProgressHUD {
 }
 
 // MARK:- private utils
-private extension ZProgressHUD {
+fileprivate extension ZProgressHUD {
     
-    private func backgroundColor() -> UIColor {
-        var backgroundColor: UIColor = UIColor.black()
+    fileprivate func backgroundColor() -> UIColor {
+        var backgroundColor: UIColor = UIColor.black
         switch self.defaultStyle {
         case .ligtht:
             backgroundColor = UIColor(white: 1.0, alpha: 1.0)
@@ -551,29 +551,29 @@ private extension ZProgressHUD {
             backgroundColor = UIColor(white: 0.0, alpha: 0.8)
             break
         case .custom:
-            backgroundColor = self.bgColor ?? UIColor.black()
+            backgroundColor = self.bgColor ?? UIColor.black
             break
         }
         return backgroundColor
     }
     
-    private func foregroundColor() -> UIColor {
-        var foregroundColor: UIColor = UIColor.white()
+    fileprivate func foregroundColor() -> UIColor {
+        var foregroundColor: UIColor = UIColor.white
         switch self.defaultStyle {
         case .ligtht:
-            foregroundColor = UIColor.black()
+            foregroundColor = UIColor.black
             break
         case .dark:
-            foregroundColor = UIColor.white()
+            foregroundColor = UIColor.white
             break
         case .custom:
-            foregroundColor = self.fgColor ?? UIColor.white()
+            foregroundColor = self.fgColor ?? UIColor.white
             break
         }
         return foregroundColor
     }
     
-    var statusImage: UIImage? {
+    fileprivate var statusImage: UIImage? {
         var statusImage: UIImage? = nil
         switch self.defaultStatusType {
         case .success:
@@ -605,7 +605,7 @@ private extension ZProgressHUD {
         var keyboardWindow: UIWindow? = nil
         
         if let targetClass = NSClassFromString("UITextEffectsWindow") {
-            for window in UIApplication.shared().windows {
+            for window in UIApplication.shared.windows {
                 
                 if window.isKind(of: targetClass) {
                     keyboardWindow = window
@@ -703,7 +703,7 @@ public extension ZProgressHUD {
     }
     
     public class func resetCenterOffset() {
-        self.shared.centerOffset = UIOffsetZero
+        self.shared.centerOffset = UIOffset.zero
     }
     
     public class func setMinimumDismissDuration(_ duration: TimeInterval) {

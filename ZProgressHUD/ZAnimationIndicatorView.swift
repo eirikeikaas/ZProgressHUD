@@ -15,7 +15,7 @@ class ZAnimationIndicatorView: UIView {
         let activityIndicatorLayer = CAShapeLayer()
         activityIndicatorLayer.fillColor = nil
         activityIndicatorLayer.strokeColor = self.strokeColor.cgColor
-        activityIndicatorLayer.contentsScale = UIScreen.main().scale
+        activityIndicatorLayer.contentsScale = UIScreen.main.scale
         activityIndicatorLayer.lineCap = kCALineCapRound
         activityIndicatorLayer.lineJoin = kCALineJoinBevel
         activityIndicatorLayer.lineWidth = self.lineWidth
@@ -38,7 +38,7 @@ class ZAnimationIndicatorView: UIView {
         }
     }
     
-    var strokeColor: UIColor = UIColor.white() {
+    var strokeColor: UIColor = UIColor.white {
         didSet {
             self.activityIndicatorLayer.strokeColor = self.strokeColor.cgColor
         }
@@ -55,7 +55,7 @@ class ZAnimationIndicatorView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        NotificationCenter.default().addObserver(self, selector: #selector(self.resetAnimating), name: NSNotification.Name.UIApplicationDidBecomeActive, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.resetAnimating), name: NSNotification.Name.UIApplicationDidBecomeActive, object: nil)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -63,7 +63,7 @@ class ZAnimationIndicatorView: UIView {
     }
     
     deinit {
-        NotificationCenter.default().removeObserver(NSNotification.Name.UIApplicationDidBecomeActive)
+        NotificationCenter.default.removeObserver(self)
     }
     
     override func willMove(toSuperview newSuperview: UIView?) {

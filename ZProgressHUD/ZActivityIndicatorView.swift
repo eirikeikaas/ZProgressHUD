@@ -29,7 +29,7 @@ class ZActivityIndicatorView: UIView {
         }
     }
     
-    var strokeColor: UIColor = UIColor.white() {
+    var strokeColor: UIColor = UIColor.white {
         didSet {
             self.activityIndicatorLayer.strokeColor = self.strokeColor.cgColor
         }
@@ -43,11 +43,11 @@ class ZActivityIndicatorView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        NotificationCenter.default().addObserver(self, selector: #selector(ZActivityIndicatorView.resetAnimating), name: NSNotification.Name.UIApplicationDidBecomeActive, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(ZActivityIndicatorView.resetAnimating), name: NSNotification.Name.UIApplicationDidBecomeActive, object: nil)
     }
     
     deinit {
-        NotificationCenter.default().removeObserver(NSNotification.Name.UIApplicationDidBecomeActive)
+        NotificationCenter.default.removeObserver(self)
     }
     
     required init?(coder aDecoder: NSCoder) {
