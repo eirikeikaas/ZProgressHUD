@@ -21,6 +21,6 @@ class ZGradientLayer: CAGradientLayer {
         let gradient = CGGradientCreateWithColorComponents(colorSpace, colors, locations, locationsCount)
         let radius = min(self.bounds.size.width , self.bounds.size.height)
         
-        CGContextDrawRadialGradient (ctx, gradient, self.gradientCenter, 0, self.gradientCenter, radius, .DrawsAfterEndLocation)
+        CGContextDrawRadialGradient (ctx, gradient!, self.gradientCenter, 0, self.gradientCenter, radius, .DrawsAfterEndLocation)
     }
 }

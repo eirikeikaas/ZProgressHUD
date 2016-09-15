@@ -765,9 +765,9 @@ internal extension UIImage {
         UIGraphicsBeginImageContextWithOptions(rect.size, false, self.scale)
         let context = UIGraphicsGetCurrentContext()
         self.drawInRect(rect)
-        CGContextSetFillColorWithColor(context, color!.CGColor)
-        CGContextSetBlendMode(context, CGBlendMode.SourceAtop)
-        CGContextFillRect(context, rect)
+        CGContextSetFillColorWithColor(context!, color!.CGColor)
+        CGContextSetBlendMode(context!, CGBlendMode.SourceAtop)
+        CGContextFillRect(context!, rect)
         let image = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         return image
